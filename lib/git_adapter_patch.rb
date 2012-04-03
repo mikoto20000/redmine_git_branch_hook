@@ -18,22 +18,25 @@ module GitBranchHookPlugin
           io.each_line do |line|
             latest_line = line
             if (line =~ /\* ([^#]*#([0-9]+).*)$/) && ($2 != nil)
-              return $2
+              return $1,$2
             end
          end
         end
-        if (latest_line =~ / ([^#]*#([0-9]+).*)$/) && ($2 != nil)
-          return $2
+        if (latest_line =~ /  ([^#]*#([0-9]+).*)$/) && ($2 != nil)
+          return $1,$2
         end
-        nil
+        [nil,nil]
       end
 
       def revisions_with_git_branch_hook(path, identifier_from, identifier_to, options={})
         revs = revisions_without_git_branch_hook(path, identifier_from, identifier_to, options)
         revs.each do |rev|
-           branch = extract_branch(rev.identifier)
+           branch,issue_id = extract_branch(rev.identifier)
            if branch
-             rev.message << "(refs #" << branch << ")"
+             issue_pattern = Regexp.new("#" << issue_id)
+             if !(rev.message =~ issue_pattern)
+               rev.message.insert(0, "(refs #" << issue_id << "{" << branch << "})\n\n")
+             end
              if block_given?
                yield rev
              end
