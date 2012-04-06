@@ -48,6 +48,12 @@ word in the commit message, issue #12345 will be closed.
 If you don't want close the issue by merge, disabled Redmine's
 issue auto close function.
 
+### NOTICE
+When merge branch on fast-forward, Merge message is not commited
+and auto close function does not work correctly. To use close by
+merge function, ensure execute 'git merge' with **'--no-ff'** 
+option.
+
 Credits
 =======
 
