@@ -34,9 +34,9 @@ module GitBranchHookPlugin
           branch,issue_id = extract_branch(rev.identifier)
 
           if branch
-            issue_pattern = Regexp.new('#' << issue_id << '([^\d]|$)')
+            issue_pattern = Regexp.new('#' + issue_id + '([^\d]|$)')
             if (rev.message =~ issue_pattern) == nil
-              logger.info(rev.identifier << " : RELATE #" << issue_id << " by Branch " << branch << "\n")
+              logger.info(rev.identifier + " : RELATE #" + issue_id + " by Branch " + branch + "\n")
               rev.message.insert(0, '(refs #' << issue_id << '{' << branch << "})\n\n")
             end
           end
@@ -44,7 +44,7 @@ module GitBranchHookPlugin
             branch = $1
             issue_pattern = Regexp.new('(#[\d+])')
             if branch =~ issue_pattern
-              logger.info(rev.identifier << " : CLOSE #" << $1 << " by Merge " << branch << "\n")
+              logger.info(rev.identifier + " : CLOSE " + $1 + " by Merge " + branch + "\n")
               rev.message << '(closes ' << $1 << ')'
             end
           end
