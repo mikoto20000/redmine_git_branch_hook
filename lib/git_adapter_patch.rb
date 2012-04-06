@@ -31,16 +31,26 @@ module GitBranchHookPlugin
       def revisions_with_git_branch_hook(path, identifier_from, identifier_to, options={})
         revs = revisions_without_git_branch_hook(path, identifier_from, identifier_to, options)
         revs.each do |rev|
-           branch,issue_id = extract_branch(rev.identifier)
-           if branch
-             issue_pattern = Regexp.new("#" << issue_id)
-             if !(rev.message =~ issue_pattern)
-               rev.message.insert(0, "(refs #" << issue_id << "{" << branch << "})\n\n")
-             end
-             if block_given?
-               yield rev
-             end
-           end
+          branch,issue_id = extract_branch(rev.identifier)
+
+          if branch
+            issue_pattern = Regexp.new('#' << issue_id << '([^\d]|$)')
+            if (rev.message =~ issue_pattern) == nil
+              logger.info(rev.identifier << " : RELATE #" << issue_id << " by Branch " << branch << "\n")
+              rev.message.insert(0, '(refs #' << issue_id << '{' << branch << "})\n\n")
+            end
+          end
+          if rev.message =~ /Merge branch '([^']+)'/
+            branch = $1
+            issue_pattern = Regexp.new('(#[\d+])')
+            if branch =~ issue_pattern
+              logger.info(rev.identifier << " : CLOSE #" << $1 << " by Merge " << branch << "\n")
+              rev.message << '(closes ' << $1 << ')'
+            end
+          end
+          if block_given?
+            yield rev
+          end
         end
         revs
       end

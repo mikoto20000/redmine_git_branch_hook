@@ -10,5 +10,5 @@ Redmine::Plugin.register :redmine_git_branch_hook do
   name 'Redmine Git Branch Hook plugin'
   author 'Takashi Okamoto'
   description 'Relate the commit to the issue from git branch name'
-  version '0.0.2'
+  version '0.1.0'
 end
