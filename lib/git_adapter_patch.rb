@@ -37,7 +37,7 @@ module GitBranchHookPlugin
             issue_pattern = Regexp.new('#' + issue_id + '([^\d]|$)')
             if (rev.message =~ issue_pattern) == nil
               logger.info(rev.identifier + " : RELATE #" + issue_id + " by Branch " + branch + "\n")
-              rev.message.insert(0, '(refs #' << issue_id << '{' << branch << "})\n\n")
+              rev.message.insert(0, '(refs #' << issue_id << ")")
             end
           end
           if rev.message =~ /Merge branch '([^']+)'/
