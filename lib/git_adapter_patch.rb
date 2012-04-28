@@ -11,16 +11,28 @@ module GitBranchHookPlugin
 
     module InstanceMethods
       def extract_branch(commit)
+        branches = nil
         latest_line = ''
         cmd_brargs = %w|branch --contains|
         cmd_brargs << commit
-        scm_cmd *cmd_brargs do |io|
-          io.each_line do |line|
-            latest_line = line
-            if (line =~ /\* ([^#]*#([0-9]+).*)$/) && ($2 != nil)
-              return $1,$2
+        if Redmine::Scm::Adapters::GitAdapter.private_method_defined?(:git_cmd)
+          git_cmd(cmd_brargs) do |io|
+            io.each_line do |line|
+              latest_line = line
+              if (line =~ /\* ([^#]*#([0-9]+).*)$/) && ($2 != nil)
+                return $1,$2
+              end
             end
-         end
+          end
+        else
+          scm_cmd *cmd_brargs do |io|
+            io.each_line do |line|
+              latest_line = line
+              if (line =~ /\* ([^#]*#([0-9]+).*)$/) && ($2 != nil)
+                return $1,$2
+              end
+            end
+          end
         end
         if (latest_line =~ /  ([^#]*#([0-9]+).*)$/) && ($2 != nil)
           return $1,$2
@@ -55,6 +67,9 @@ module GitBranchHookPlugin
         revs
       end
 
+    end
+    def logger
+      Rails.logger
     end
   end
 end
