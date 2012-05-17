@@ -54,7 +54,7 @@ module GitBranchHookPlugin
           end
           if rev.message =~ /Merge branch '([^']+)'/
             branch = $1
-            issue_pattern = Regexp.new('(#[\d+])')
+            issue_pattern = Regexp.new('(#[\d]+)')
             if branch =~ issue_pattern
               logger.info(rev.identifier + " : CLOSE " + $1 + " by Merge " + branch + "\n")
               rev.message << '(closes ' << $1 << ')'
