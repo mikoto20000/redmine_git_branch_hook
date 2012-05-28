@@ -1,8 +1,15 @@
 require 'redmine'
-require 'dispatcher'
 require 'git_adapter_patch'
 
-Dispatcher.to_prepare do
+begin
+  require 'dispatcher'
+  def dispatch(plugin, &block)
+    Dispatcher.to_prepare(plugin, &block)
+  end
+rescue LoadError # Rails 3
+  def dispatch(plugin, &block)
+    Rails.configuration.to_prepare(&block)
+  end
 end
 
 Redmine::Plugin.register :redmine_git_branch_hook do
