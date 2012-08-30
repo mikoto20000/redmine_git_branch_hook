@@ -1,0 +1,4 @@
+ja:
+  label_merge_branch: マージを検出するブランチ
+  label_close_by_merge: マージ時にチケットを自動でクローズ
+

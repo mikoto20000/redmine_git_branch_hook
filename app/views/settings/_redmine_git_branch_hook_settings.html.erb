@@ -1,0 +1,10 @@
+<fieldset>
+<p>
+  <lable><%= l(:label_close_by_merge)%></label>
+  <%= check_box_tag('settings[close_by_merge]', 1, @settings['close_by_merge'] == '1') %>
+</p>
+<p>
+  <lable><%= l(:label_merge_branch)%></label>
+  <%= text_field_tag('settings[merge_branch]',  @settings['merge_branch'])%>  
+</p>
+</fieldset>

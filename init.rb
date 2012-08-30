@@ -6,4 +6,9 @@ Redmine::Plugin.register :redmine_git_branch_hook do
   author 'Takashi Okamoto'
   description 'Relate the commit to the issue from git branch name'
   version '0.2.1'
+  
+  settings :default => {
+    'merge_branch' => 'master',
+    'close_by_merge' => '1'
+  }, :partial =>'settings/redmine_git_branch_hook_settings'
 end
