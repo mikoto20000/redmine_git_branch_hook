@@ -1,3 +1,4 @@
+require 'redmine/scm/adapters'
 require 'redmine/scm/adapters/git_adapter'
 
 module GitBranchHookPlugin
